@@ -40,8 +40,11 @@ def process_image():
         except Exception as e:
             return jsonify(error=str(e)), 400
 
+from constants import TWITTER_IMG_PREFIX
+
 # When using the chrome extension, it will send the image as a URL
 # NOTE: only do this temporarily for the demo, making the server download arbitrary files is categorically unsafe
+# To temporarily work around this we limit images to come from the twitter domain
 @app.route("/process_image_url", methods=["POST"])
 def process_image_url():
     if not request.form:
@@ -50,6 +53,8 @@ def process_image_url():
         return jsonify(error="No url provided"), 400
 
     url = request.form.get("url")
+    if not url.startswith(TWITTER_IMG_PREFIX):
+        return jsonify(error="Invalid image URL"), 400
     
     # Download the linked image
     image_data = download_file(url)

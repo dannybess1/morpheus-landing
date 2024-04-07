@@ -1,1 +1,1 @@
-from .constants import ORIGINS
+from .constants import ORIGINS, TWITTER_IMG_PREFIX

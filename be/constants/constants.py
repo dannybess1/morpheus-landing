@@ -4,3 +4,5 @@ ORIGINS = [
     "https://www.morpheus.pics",
     "https://morpheus-landing.vercel.app",
 ]
+
+TWITTER_IMG_PREFIX="https://pbs.twimg.com/"
