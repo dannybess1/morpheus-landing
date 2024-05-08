@@ -1,5 +1,7 @@
 from google.cloud import storage
 from .singleton import singleton
+from io import BytesIO
+import logging
 
 @singleton
 class CloudStorageService:
@@ -12,7 +14,7 @@ class CloudStorageService:
     def __init__(self) -> None:
         self.storage_client = storage.Client()
 
-        self.bucket_name = "proteus-images"
+        self.bucket_name = "proteus-local"
 
         # TODO: do i need to create the bucket? - just do that in the console? 
         self.bucket = self.storage_client.bucket(self.bucket_name)
@@ -24,10 +26,11 @@ class CloudStorageService:
         Returns the url of the newly created resource
         """
         blob = self.bucket.blob(file_name)
+        blob.upload_from_file(BytesIO(file_data))
+
+        logging.info(f"Uploaded {file_name} to {blob.public_url}")
         
-        # TODO: check string format here is correct
-        url = blob.upload_from_string(file_data)
-        return url
+        return blob.public_url
 
 
 

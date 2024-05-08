@@ -18,6 +18,7 @@ requests = "*"
 flask-sqlalchemy = "*"
 pinecone-client = "*"
 google-cloud-storage = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

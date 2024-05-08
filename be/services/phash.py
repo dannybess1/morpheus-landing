@@ -13,7 +13,7 @@ class PhashService:
     @staticmethod
     def add_phash(url: str, phashes: dict) -> bool:
         # TODO: create conversion method / lineup names
-        new_phashes = ImageRecord(url=url, block_hash=phashes["blockhash"], neural_hash=phashes["neuralhash"], color_hash=phashes["colourhash"])
+        new_phashes = ImageRecord(url=url, block_hash=phashes.blockhash, neural_hash=phashes.neuralhash, color_hash=phashes.colourhash)
         try:
             db.session.add(new_phashes)
             db.session.commit()
@@ -30,6 +30,24 @@ class PhashService:
         Given an id, return the ImageRecord
         """
         return ImageRecord.query.get(id)
+    
+    @staticmethod
+    def get_page(page: int, limit: int = 25) -> list[ImageRecord]:
+        """
+        Given a page and limit, return limit the ImageRecords
+        """
+        images = ImageRecord.query.paginate(page=page, per_page=limit)
+
+        return_images = []
+        for image in images.items:
+            return_images.append({
+                "id": image.id,
+                "url": image.url,
+                "block_hash": image.block_hash,
+                "neural_hash": image.neural_hash,
+                "color_hash": image.color_hash
+            })
+        return return_images
 
     @staticmethod
     def get_from_url(url: str) -> Optional[ImageRecord]:

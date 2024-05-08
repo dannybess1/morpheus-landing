@@ -1,3 +1,6 @@
+import os
+
+
 """
 File to prevent circular imports when using the database.
 """
@@ -14,3 +17,4 @@ if not pinecone_api_key:
     raise ValueError("PINECONE_API_KEY is not set")
 
 pc = Pinecone(api_key=pinecone_api_key)
+
