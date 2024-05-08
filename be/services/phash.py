@@ -2,6 +2,7 @@ from models.image_record import ImageRecord
 from phashes import PERCEPTUAL_HASHES
 from typing import Optional
 from database import db
+import logging
 
 class PhashService:
     """
@@ -17,11 +18,12 @@ class PhashService:
         try:
             db.session.add(new_phashes)
             db.session.commit()
+            logging.info(f"Added phashes to db for {url}")
             return True
         except Exception as e:
             db.session.rollback()
             # TODO: manage
-            print(f"Failed to add phashes to db: {e}")
+            logging.error(f"Failed to add phashes to db: {e}")
             return False
 
     @staticmethod

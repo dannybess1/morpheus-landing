@@ -7,6 +7,7 @@ import io
 
 from utils import apply_phashes, download_file
 from services.cloud_storage import CloudStorageService
+from services.pinecone import PineconeService
 from services.phash import PhashService
 
 # https://github.com/python-pillow/Pillow/issues/1510
@@ -43,8 +44,12 @@ def process_image():
             # Then return the db
             # TODO: should the filename be a uuid?
             url = CloudStorageService().upload_file(file.filename, image_data)
-            PhashService.add_phash(url, perceptual_hashes_for_image)
             
+            # Add hashes to vector db
+            PineconeService().insert(url, hashes)
+
+            # Add hashes to the database
+            PhashService.add_phash(url, perceptual_hashes_for_image)
 
             return jsonify(perceptual_hashes_for_image.__dict__)
         except Exception as e:
@@ -86,7 +91,12 @@ def process_image_url():
             logging.info(f"Phashes for image {url}: {hashes}")
 
             # We store the twitter url here rather than 
+            # Add hashes to vector db
+            PineconeService().insert(url, hashes)
+
+            # Add hashes to the database
             PhashService.add_phash(url, perceptual_hashes_for_image)
+
 
             return jsonify(perceptual_hashes_for_image.__dict__)
         except Exception as e:
